@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Category;
 use App\Models\User;
+use Constants;
 use Illuminate\Auth\Access\Response;
 
 class CategoryPolicy
@@ -13,7 +14,7 @@ class CategoryPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->hasRole(Constants::ADMIN || Constants::USER);
     }
 
     /**
@@ -21,7 +22,7 @@ class CategoryPolicy
      */
     public function view(User $user, Category $category): bool
     {
-        //
+        return $user->hasRole(Constants::ADMIN || Constants::USER);
     }
 
     /**
@@ -29,7 +30,7 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->hasRole(Constants::ADMIN);
     }
 
     /**
@@ -37,7 +38,7 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category): bool
     {
-        //
+        return $user->hasRole(Constants::ADMIN);
     }
 
     /**
@@ -45,7 +46,7 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category): bool
     {
-        //
+        return $user->hasRole(Constants::ADMIN);
     }
 
     /**
