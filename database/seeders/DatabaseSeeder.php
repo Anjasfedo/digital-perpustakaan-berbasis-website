@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create(
+        $user = User::updateOrCreate(
             [
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
@@ -30,9 +30,11 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::firstOrCreate([
+            Role::updateOrCreate([
                 'name' => $role
             ]);
         }
+
+        $user->assignRole(Constants::ADMIN);
     }
 }
