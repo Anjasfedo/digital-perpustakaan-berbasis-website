@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Gate;
 
 class BookController extends Controller
 {
+    /**
+     * ToDo
+     * - Add filter based on category (index)
+     * - Add export to excel functionality (index)
+     */
+
     protected $model;
 
     protected $category;
@@ -30,9 +36,17 @@ class BookController extends Controller
     {
         Gate::authorize('viewAny', $this->model);
 
+        $categories = $this->category->all();
+
         $books = $this->model->with('category', 'user')->get();
 
-        return view('books.index', compact('books'));
+        if (request()->has('category_id'))
+        {
+            $books = $books->where('category_id', request('category_id'));
+        }
+
+
+        return view('books.index', compact('books', 'categories'));
     }
 
     /**
