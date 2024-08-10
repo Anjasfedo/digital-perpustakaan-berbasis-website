@@ -13,13 +13,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BookController extends Controller
 {
-    /**
-     * ToDo
-     * - Add filter based on category (index) => Done
-     * - Add export to excel functionality (index)
-     * - Show file preview or redirect it (view) => Done
-     */
-
     protected $model;
 
     protected $category;
@@ -116,15 +109,17 @@ class BookController extends Controller
     {
         Gate::authorize('update', $book);
 
+        $validated = $request->validated();
+
         if ($request->hasFile('file')) {
-            $this->uploadService->handleUploadFile($request->file('file'), 'books', $book->file);
+            $validated['file'] = $this->uploadService->handleUpdateFile($request->file('file'), $book->file, 'books');
         }
 
         if ($request->hasFile('cover')) {
-            $this->uploadService->handleUploadFile($request->file('cover'), 'books', $book->cover);
+            $validated['cover'] = $this->uploadService->handleUpdateFile($request->file('cover'), $book->cover, 'books');
         }
 
-        $book->update($request->validated());
+        $book->update($validated);
 
         return redirect()->route('books.index')->with('success', 'Book updated successfully.');
     }

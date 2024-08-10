@@ -80,7 +80,7 @@
                                         </th>
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ $book->description }}
+                                            {{ $book->description_preview }}
                                         </th>
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -94,9 +94,8 @@
                                         </th>
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-
                                             <a href="{{ $book->cover_url }}" target="_blank">
-                                                <img class="rounded-full w-96 h-96" src="{{ $book->cover_url }}"
+                                                <img class="h-auto max-w-full" src="{{ $book->cover_url }}"
                                                     alt="cover">
                                             </a>
 

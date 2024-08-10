@@ -44,4 +44,9 @@ class Book extends Model
     {
         return $this->generateStorageUrl($this->cover);
     }
+
+    public function getDescriptionPreviewAttribute()
+    {
+        return substr($this->description, 0, 25) . '...';
+    }
 }

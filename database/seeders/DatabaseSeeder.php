@@ -16,10 +16,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::updateOrCreate(
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
             [
                 'name' => 'Admin',
-                'email' => 'admin@example.com',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'user_1@example.com'],
+            [
+                'name' => 'User_1',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'user_2@example.com'],
+            [
+                'name' => 'User_2',
                 'password' => Hash::make('password'),
             ]
         );
@@ -35,6 +51,12 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $user->assignRole(Constants::ADMIN);
+        $admin = User::where('email', 'admin@example.com')->first();
+        $user1 = User::where('email', 'user_1@example.com')->first();
+        $user2 = User::where('email', 'user_2@example.com')->first();
+
+        $admin->assignRole(Constants::ADMIN);
+        $user1->assignRole(Constants::USER);
+        $user2->assignRole(Constants::USER);
     }
 }
