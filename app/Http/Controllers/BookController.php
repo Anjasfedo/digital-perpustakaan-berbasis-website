@@ -13,8 +13,9 @@ class BookController extends Controller
 {
     /**
      * ToDo
-     * - Add filter based on category (index)
+     * - Add filter based on category (index) => Done
      * - Add export to excel functionality (index)
+     * - Show file preview or redirect it (view) => Done
      */
 
     protected $model;

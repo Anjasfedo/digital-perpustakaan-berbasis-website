@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Book extends Model
 {
@@ -27,5 +28,20 @@ class Book extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function generateStorageUrl($file)
+    {
+        return $file ? asset(Storage::url($file)) : null;
+    }
+
+    public function getFileUrlAttribute()
+    {
+        return $this->generateStorageUrl($this->file);
+    }
+
+    public function getCoverUrlAttribute()
+    {
+        return $this->generateStorageUrl($this->cover);
     }
 }
