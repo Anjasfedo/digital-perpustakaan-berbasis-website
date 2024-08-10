@@ -26,7 +26,7 @@ class BookController extends Controller
     {
         Gate::authorize('viewAny', $this->model);
 
-        $books = $this->model->with('category')->get();
+        $books = $this->model->with('category', 'user')->get();
 
         return view('books.index', compact('books'));
     }
@@ -50,7 +50,11 @@ class BookController extends Controller
     {
         Gate::authorize('create', $this->model);
 
-        $book = $this->model->create($request->validated());
+        $validated = $request->validated();
+
+        $validated['user_id'] = auth()->user()->id;
+
+        $book = $this->model->create($validated);
 
         return redirect()->route('books.index')->with('success', 'Book created successfully.');
     }
