@@ -21,6 +21,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('/categories', CategoryController::class);
 
     Route::resource('/books', BookController::class);
+
+    Route::group(['prefix' => 'export', 'as' => 'export.'], function () {
+        Route::get('/books', [BookController::class, 'export'])->name('books');
+    });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

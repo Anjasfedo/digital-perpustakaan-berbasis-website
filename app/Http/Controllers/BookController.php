@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BooksExport;
 use App\Models\Book;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Category;
 use App\Services\UploadService;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookController extends Controller
 {
@@ -41,11 +43,10 @@ class BookController extends Controller
 
         $books = $this->model->with('category', 'user')->get();
 
-        if (request()->has('category_id'))
+        if (request('category_id') != '')
         {
             $books = $books->where('category_id', request('category_id'));
         }
-
 
         return view('books.index', compact('books', 'categories'));
     }
@@ -146,6 +147,13 @@ class BookController extends Controller
         $book->delete();
 
         return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
-
    }
+
+    public function export()
+    {
+        $timestamp = now()->format('Y-m-d_H-i-s');
+        $filename = "books_export_{$timestamp}.xlsx";
+
+        return Excel::download(new BooksExport, $filename);
+    }
 }
