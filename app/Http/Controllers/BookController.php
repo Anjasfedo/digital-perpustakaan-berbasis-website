@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Category;
+use App\Services\UploadService;
 use Illuminate\Support\Facades\Gate;
 
 class BookController extends Controller
@@ -14,10 +15,13 @@ class BookController extends Controller
 
     protected $category;
 
-    public function __construct(Book $book, Category $category)
+    protected $uploadService;
+
+    public function __construct(Book $book, Category $category, UploadService $uploadService)
     {
         $this->model = $book;
         $this->category = $category;
+        $this->uploadService = $uploadService;
     }
     /**
      * Display a listing of the resource.
@@ -54,7 +58,15 @@ class BookController extends Controller
 
         $validated['user_id'] = auth()->user()->id;
 
-        $book = $this->model->create($validated);
+        if ($request->hasFile('cover')) {
+            $validated['cover'] = $this->uploadService->handleUploadFile($request->file('cover'), 'books');
+        }
+
+        if ($request->hasFile('file')) {
+            $validated['file'] = $this->uploadService->handleUploadFile($request->file('file'), 'books');
+        }
+
+        $this->model->create($validated);
 
         return redirect()->route('books.index')->with('success', 'Book created successfully.');
     }
@@ -88,6 +100,14 @@ class BookController extends Controller
     {
         Gate::authorize('update', $book);
 
+        if ($request->hasFile('file')) {
+            $this->uploadService->handleUploadFile($request->file('file'), 'books', $book->file);
+        }
+
+        if ($request->hasFile('cover')) {
+            $this->uploadService->handleUploadFile($request->file('cover'), 'books', $book->cover);
+        }
+
         $book->update($request->validated());
 
         return redirect()->route('books.index')->with('success', 'Book updated successfully.');
@@ -100,8 +120,17 @@ class BookController extends Controller
     {
         Gate::authorize('delete', $book);
 
+        if ($book->file) {
+            $this->uploadService->handleDeleteFile($book->file, 'books');
+        }
+
+        if ($book->cover) {
+            $this->uploadService->handleDeleteFile($book->cover, 'books');
+        }
+
         $book->delete();
 
         return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
-    }
+
+   }
 }
