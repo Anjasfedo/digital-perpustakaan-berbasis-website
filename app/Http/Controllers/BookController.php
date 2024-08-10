@@ -121,11 +121,11 @@ class BookController extends Controller
         Gate::authorize('delete', $book);
 
         if ($book->file) {
-            $this->uploadService->handleDeleteFile($book->file, 'books');
+            $this->uploadService->handleDeleteFile($book->file);
         }
 
         if ($book->cover) {
-            $this->uploadService->handleDeleteFile($book->cover, 'books');
+            $this->uploadService->handleDeleteFile($book->cover);
         }
 
         $book->delete();

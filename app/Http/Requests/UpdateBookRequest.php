@@ -26,8 +26,8 @@ class UpdateBookRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'quantity' => 'required|numeric',
-            'file' => 'required|file|mimes:pdf',
-            'cover' => 'required|file|mimes:jpeg,jpg,png',
+            'file' => 'file|mimes:pdf|max:2048',
+            'cover' => 'file|mimes:jpeg,jpg,png|max:2048',
         ];
     }
 }
