@@ -21,9 +21,6 @@
                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        No
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
                                         Name
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -31,17 +28,28 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="text-center">
-                                {{-- <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple MacBook Pro 17"
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        <a href="#"
-                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                    </td>
-                                </tr> --}}
+                            <tbody>
+                                @foreach ($categories as $category)
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th scope="row"
+                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ $category->name }}
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            <div><a href="{{ route('categories.show', $category) }}"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Show</a>
+                                                <a href="{{ route('categories.edit', $category) }}"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                                <form action="{{ route('categories.destroy', $category) }}" method="POST" class="delete-confirm">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button
+                                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="submit">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -49,53 +57,4 @@
             </div>
         </div>
     </div>
-
-    @push('scripts')
-        <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-        <script src="https://cdn.datatables.net/2.0.7/js/dataTables.tailwindcss.js"></script>
-        <script>
-            $(document).ready(function() {
-                let table = $('#categories-table').DataTable({
-                    layout: {
-                        topStart: 'search',
-                        topEnd: null,
-                        bottomStart: 'paging',
-                        bottomEnd: 'info',
-                    },
-                    "processing": true,
-                    "paging": true,
-                    "serverside": true,
-                    "bDestroy": true,
-                    "searching": true,
-                    "ordering": false,
-                    "info": true,
-                    "responsive": true,
-                    "ajax": "{{ route('categories.list') }}",
-                    "order": [
-                        [0, "desc"]
-                    ],
-                    "columns": [{
-                            "data": "id",
-                            "render": function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {
-                            "data": "name"
-                        },
-                        {
-                            data: null,
-                            render: (data, type, row) => renderAction(data, row)
-                        }
-                    ]
-                });
-            });
-
-            function renderAction(data, row) {
-                // let actionButtons = `<a href="{{ route('categories.edit', '${data}') }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>`
-
-                return '<div class="w-full flex items-center justify-center">' + actionButtons + '</div>';
-            }
-        </script>
-    @endpush
 </x-app-layout>

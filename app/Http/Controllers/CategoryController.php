@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
@@ -22,20 +21,13 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      */
 
-    public function list(Request $request)
-    {
-        if ($request->ajax()) {
-            $categories = $this->model->all();
-
-            return datatables()->of($categories)->make(true);
-        }
-    }
-
     public function index()
     {
         Gate::authorize('viewAny', $this->model);
 
-        return view('categories.index');
+        $categories = $this->model->all();
+
+        return view('categories.index', compact('categories'));
     }
 
     /**
